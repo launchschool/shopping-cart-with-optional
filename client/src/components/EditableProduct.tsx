@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { BaseProduct, Product } from "../types";
+import { NewProduct, Product } from "../types";
 import EditProductForm from "./EditProductForm";
 import ProductDetails from "./ProductDetails";
 
 interface EditableProductProps {
   product: Product;
   onUpdateProduct: (
-    updatedProduct: BaseProduct,
+    updatedProduct: NewProduct,
     productId: string,
     onToggleEdit: () => void
   ) => void;

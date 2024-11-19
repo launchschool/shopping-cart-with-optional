@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import AddProductForm from "./AddProductForm";
-import { BaseProduct } from "../types";
+import { ProductAction } from "../reducers/productReducer";
 
 interface ToggleableAddProductFormProps {
-  onAddProduct: (product: BaseProduct, onToggleForm: () => void) => void;
+  dispatchProducts: Dispatch<ProductAction>;
 }
 
 const ToggleableAddProductForm = ({
-  onAddProduct,
+  dispatchProducts,
 }: ToggleableAddProductFormProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const handleToggleForm = () => {
@@ -18,7 +18,7 @@ const ToggleableAddProductForm = ({
       {isVisible ? (
         <AddProductForm
           onToggleForm={handleToggleForm}
-          onAddProduct={onAddProduct}
+          dispatchProducts={dispatchProducts}
         />
       ) : (
         <p>

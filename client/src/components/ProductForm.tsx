@@ -1,10 +1,10 @@
 interface ProductFormProps {
   title: string;
-  price: number;
-  quantity: number;
+  price: string;
+  quantity: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  setPrice: React.Dispatch<React.SetStateAction<number>>;
-  setQuantity: React.Dispatch<React.SetStateAction<number>>;
+  setPrice: React.Dispatch<React.SetStateAction<string>>;
+  setQuantity: React.Dispatch<React.SetStateAction<string>>;
   onSubmit: (e: React.SyntheticEvent) => void;
   onToggleForm: () => void;
   buttonLabel: string;
@@ -44,7 +44,7 @@ const ProductForm = ({
           step="0.01"
           required
           value={price}
-          onChange={(e) => setPrice(+e.target.value)}
+          onChange={(e) => setPrice(e.target.value)}
         />
       </div>
       <div className="input-group">
@@ -56,7 +56,7 @@ const ProductForm = ({
           min="0"
           required
           value={quantity}
-          onChange={(e) => setQuantity(+e.target.value)}
+          onChange={(e) => setQuantity(e.target.value)}
         />
       </div>
       <div className="actions form-actions">

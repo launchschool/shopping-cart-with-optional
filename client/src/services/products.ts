@@ -1,15 +1,15 @@
 import axios from "axios";
-import { BaseProduct } from "../types";
 import { z } from "zod";
+import { NewProduct } from "../types";
 
 const productSchema = z.object({
   _id: z.string(),
   title: z.string(),
   price: z.number(),
   quantity: z.number(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  __v: z.number().optional(),
+  // createdAt: z.string().optional(),
+  // updatedAt: z.string().optional(),
+  // __v: z.number().optional(),
 });
 
 const cartItemSchema = z.object({
@@ -18,9 +18,9 @@ const cartItemSchema = z.object({
   title: z.string(),
   price: z.number(),
   quantity: z.number(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-  __v: z.number().optional(),
+  // createdAt: z.string().optional(),
+  // updatedAt: z.string().optional(),
+  // __v: z.number().optional(),
 });
 
 const getProductsResponseSchema = z.array(productSchema);
@@ -43,7 +43,7 @@ export const getCartItems = async () => {
 };
 
 export const updateProduct = async (
-  updatedProduct: BaseProduct,
+  updatedProduct: NewProduct,
   productId: string
 ) => {
   const { data } = await axios.put(`/api/products/${productId}`, {
@@ -52,7 +52,7 @@ export const updateProduct = async (
   return updateProductResponseSchema.parse(data);
 };
 
-export const addProduct = async (newProduct: BaseProduct) => {
+export const addProduct = async (newProduct: NewProduct) => {
   const { data } = await axios.post("/api/products", { ...newProduct });
   return addProductResponseSchema.parse(data);
 };

@@ -1,10 +1,10 @@
-import { BaseProduct, Product } from "../types";
+import { NewProduct, Product } from "../types";
 import EditableProduct from "./EditableProduct";
 
 interface ProductListingProps {
   products: Product[];
   onUpdateProduct: (
-    updatedProduct: BaseProduct,
+    updatedProduct: NewProduct,
     productId: string,
     onToggleEdit: () => void
   ) => void;

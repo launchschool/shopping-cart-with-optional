@@ -1,11 +1,11 @@
 import { useState } from "react";
 import ProductForm from "./ProductForm";
-import { BaseProduct, Product } from "../types";
+import { NewProduct, Product } from "../types";
 
 interface EditProductFormProps extends Product {
   onToggleEdit: () => void;
   onUpdateProduct: (
-    updatedProduct: BaseProduct,
+    updatedProduct: NewProduct,
     productId: string,
     onToggleEdit: () => void
   ) => void;
@@ -20,15 +20,15 @@ const EditProductForm = ({
   onUpdateProduct,
 }: EditProductFormProps) => {
   const [title, setTitle] = useState(propTitle || "");
-  const [price, setPrice] = useState(propPrice || 0);
-  const [quantity, setQuantity] = useState(propQuantity || 0);
+  const [price, setPrice] = useState(String(propPrice) || "");
+  const [quantity, setQuantity] = useState(String(propQuantity) || "0");
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const updatedProduct = {
       title,
-      price,
-      quantity,
+      price: +price,
+      quantity: +quantity,
     };
 
     onUpdateProduct(updatedProduct, _id, onToggleEdit);

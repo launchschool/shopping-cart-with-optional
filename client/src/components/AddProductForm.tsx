@@ -1,36 +1,42 @@
-import { useState } from "react";
-import { BaseProduct } from "../types";
+import { Dispatch, useState } from "react";
 import ProductForm from "./ProductForm";
+import { addProduct } from "../services/products";
+import { ProductAction } from "../reducers/productReducer";
+import { addProductAction } from "../reducers/productReducer";
 
 interface AddProductFormProps {
   onToggleForm: () => void;
-  onAddProduct: (product: BaseProduct, onToggleForm: () => void) => void;
+  // onAddProduct: (product: NewProduct, onToggleForm: () => void) => void;
+  dispatchProducts: Dispatch<ProductAction>;
 }
 
 const AddProductForm = ({
   onToggleForm,
-  onAddProduct,
+  dispatchProducts,
 }: AddProductFormProps) => {
   const [title, setTitle] = useState("");
-  const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("0");
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const newProduct = {
       title,
-      price,
-      quantity,
+      price: +price,
+      quantity: +quantity,
     };
-    onAddProduct(newProduct, onToggleForm);
+    // onAddProduct(newProduct, onToggleForm);
+    const data = await addProduct(newProduct);
+    dispatchProducts(addProductAction(data));
+    onToggleForm();
   };
 
   return (
     <div className="add-form">
       <ProductForm
         title={title}
-        price={price}
-        quantity={quantity}
+        price={String(price)}
+        quantity={String(quantity)}
         setTitle={setTitle}
         setPrice={setPrice}
         setQuantity={setQuantity}
