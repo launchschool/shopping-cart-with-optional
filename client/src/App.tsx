@@ -26,10 +26,25 @@ import {
   clearCartAction,
 } from "./reducers/cartReducer";
 import { addProduct } from "./services/products";
+import {
+  SortKey,
+  SortDirection,
+  sortProductsAction,
+} from "./reducers/productReducer";
 
 function App() {
-  const [products, dispatchProducts] = useReducer(productReducer, []);
+  const [productState, dispatchProducts] = useReducer(productReducer, {
+    items: [],
+    sort: {
+      key: "title",
+      direction: "asc",
+    },
+  });
   const [cartItems, dispatchCart] = useReducer(cartReducer, []);
+
+  const handleSort = (key: SortKey, direction: SortDirection) => {
+    dispatchProducts(sortProductsAction(key, direction));
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -104,7 +119,9 @@ function App() {
   };
 
   const handleAddToCart = async (productId: string) => {
-    const product = products.find((product) => product._id === productId);
+    const product = productState.items.find(
+      (product) => product._id === productId
+    );
     if (!product || product.quantity === 0) return;
     dispatchProducts(
       updateProductQuantityAction(productId, product.quantity - 1)
@@ -123,9 +140,11 @@ function App() {
       <main>
         <ProductListing
           onAddToCart={handleAddToCart}
-          products={products}
+          products={productState.items}
           onUpdateProduct={handleUpdateProduct}
           onDeleteProduct={handleDeleteProduct}
+          onSort={handleSort}
+          currentSort={productState.sort}
         />
         <ToggleableAddProductForm onAddProduct={handleAddProduct} />
       </main>

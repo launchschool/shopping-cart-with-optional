@@ -1,5 +1,40 @@
 import { Product } from "../types";
 
+export type SortKey = "title" | "price" | "quantity";
+export type SortDirection = "asc" | "desc";
+
+export const sortProducts = (
+  products: Product[],
+  key: SortKey,
+  direction: SortDirection
+): Product[] => {
+  return [...products].sort((a, b) => {
+    let aValue = a[key];
+    let bValue = b[key];
+
+    if (key === "title") {
+      aValue = (aValue as string).toLowerCase();
+      bValue = (bValue as string).toLowerCase();
+    }
+
+    if (direction === "asc") {
+      return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+    } else {
+      return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+    }
+  });
+};
+
+export interface SortState {
+  key: SortKey;
+  direction: SortDirection;
+}
+
+export interface ProductState {
+  items: Product[];
+  sort: SortState;
+}
+
 export type ProductAction =
   | { type: "FETCH_PRODUCTS"; payload: Product[] }
   | { type: "ADD_PRODUCT"; payload: Product }
@@ -8,38 +43,93 @@ export type ProductAction =
   | {
       type: "UPDATE_PRODUCT_QUANTITY";
       payload: { productId: string; quantity: number };
-    };
+    }
+  | { type: "SORT_PRODUCTS"; payload: SortState };
+
+const initialState: ProductState = {
+  items: [],
+  sort: {
+    key: "title",
+    direction: "asc",
+  },
+};
 
 export const productReducer = (
-  state: Product[],
+  state: ProductState = initialState,
   action: ProductAction
-): Product[] => {
+): ProductState => {
   switch (action.type) {
-    case "FETCH_PRODUCTS":
-      return action.payload;
+    case "FETCH_PRODUCTS": {
+      return {
+        items: sortProducts(
+          action.payload,
+          state.sort.key,
+          state.sort.direction
+        ),
+        sort: state.sort,
+      };
+    }
 
-    case "ADD_PRODUCT":
-      return [...state, action.payload];
+    case "ADD_PRODUCT": {
+      const newItems = [...state.items, action.payload];
+      return {
+        items: sortProducts(newItems, state.sort.key, state.sort.direction),
+        sort: state.sort,
+      };
+    }
 
-    case "UPDATE_PRODUCT":
-      return state.map((product) =>
+    case "UPDATE_PRODUCT": {
+      const updatedItems = state.items.map((product) =>
         product._id === action.payload._id ? action.payload : product
       );
+      return {
+        items: sortProducts(updatedItems, state.sort.key, state.sort.direction),
+        sort: state.sort,
+      };
+    }
 
-    case "DELETE_PRODUCT":
-      return state.filter((product) => product._id !== action.payload);
+    case "DELETE_PRODUCT": {
+      return {
+        items: state.items.filter((product) => product._id !== action.payload),
+        sort: state.sort,
+      };
+    }
 
-    case "UPDATE_PRODUCT_QUANTITY":
-      return state.map((product) =>
+    case "UPDATE_PRODUCT_QUANTITY": {
+      const updatedItems = state.items.map((product) =>
         product._id === action.payload.productId
           ? { ...product, quantity: action.payload.quantity }
           : product
       );
+      return {
+        items: sortProducts(updatedItems, state.sort.key, state.sort.direction),
+        sort: state.sort,
+      };
+    }
+
+    case "SORT_PRODUCTS": {
+      return {
+        items: sortProducts(
+          state.items,
+          action.payload.key,
+          action.payload.direction
+        ),
+        sort: action.payload,
+      };
+    }
 
     default:
       return state;
   }
 };
+
+export const sortProductsAction = (
+  key: SortKey,
+  direction: SortDirection
+): ProductAction => ({
+  type: "SORT_PRODUCTS",
+  payload: { key, direction },
+});
 
 export const fetchProductsAction = (products: Product[]): ProductAction => ({
   type: "FETCH_PRODUCTS",

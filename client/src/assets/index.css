@@ -198,14 +198,37 @@ h3 {
 .add-form.visible form {
   display: block;
 } */
+/* New CSS for sorting */
 
-table td,
-th {
-  text-align: center;
-  padding: 0 10px;
+.product-listing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-table td.total {
-  text-align: right;
-  padding-top: 20px;
+.sort-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sort-button {
+  background: transparent;
+  color: #07575b;
+  border: 1px solid #07575b;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sort-button:hover {
+  background: #07575b;
+  color: white;
+}
+
+.sort-button.active {
+  background: #07575b;
+  color: white;
 }
