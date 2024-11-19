@@ -1,18 +1,16 @@
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import ProductForm from "./ProductForm";
-import { addProduct } from "../services/products";
-import { ProductAction } from "../reducers/productReducer";
-import { addProductAction } from "../reducers/productReducer";
+import { NewProduct } from "../types";
 
 interface AddProductFormProps {
   onToggleForm: () => void;
-  // onAddProduct: (product: NewProduct, onToggleForm: () => void) => void;
-  dispatchProducts: Dispatch<ProductAction>;
+  onAddProduct: (product: NewProduct, callback: () => void) => void;
+  // dispatchProducts: Dispatch<ProductAction>;
 }
 
 const AddProductForm = ({
   onToggleForm,
-  dispatchProducts,
+  onAddProduct,
 }: AddProductFormProps) => {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -25,10 +23,10 @@ const AddProductForm = ({
       price: +price,
       quantity: +quantity,
     };
-    // onAddProduct(newProduct, onToggleForm);
-    const data = await addProduct(newProduct);
-    dispatchProducts(addProductAction(data));
-    onToggleForm();
+    onAddProduct(newProduct, onToggleForm);
+    // const data = await addProduct(newProduct);
+    // dispatchProducts(addProductAction(data));
+    // onToggleForm();
   };
 
   return (
