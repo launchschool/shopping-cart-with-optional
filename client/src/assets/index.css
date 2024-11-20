@@ -331,3 +331,37 @@ button {
   background: var(--button-bg);
   color: var(--button-text);
 }
+
+/* Currency Styles */
+
+.currency-toggle {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.currency-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  gap: 40px;
+}
+
+.header-controls {
+  align-items: center;
+  gap: 8px;
+}
