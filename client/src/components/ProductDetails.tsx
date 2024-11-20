@@ -21,11 +21,11 @@ const ProductDetails = ({
   const handleDelete = () => {
     onDeleteProduct(_id);
   };
-  const { currency } = useContext(CurrencyContext);
+  const { currency, rates } = useContext(CurrencyContext);
   return (
     <div className="product-details">
       <h3>{title}</h3>
-      <p className="price">{formatPrice(price, currency)}</p>
+      <p className="price">{formatPrice(price, currency, rates)}</p>
       <p className="quantity">{quantity} left in stock</p>
       <div className="actions product-actions">
         <button

@@ -6,13 +6,12 @@ import { formatPrice } from "../helpers/helpers";
 interface CartItemProps extends CartItemType {}
 
 const CartItem = ({ title, quantity, price }: CartItemProps) => {
-  const { currency } = useContext(CurrencyContext);
-  console.log(currency);
+  const { currency, rates } = useContext(CurrencyContext);
   return (
     <tr data-testid={`cartItem-${title}`}>
       <td>{title}</td>
       <td>{quantity}</td>
-      <td>{formatPrice(price, currency)}</td>
+      <td>{formatPrice(price, currency, rates)}</td>
     </tr>
   );
 };

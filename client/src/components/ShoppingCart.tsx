@@ -13,7 +13,7 @@ interface ShoppingCartProps {
 const ShoppingCart = ({ cartItems, onCheckout }: ShoppingCartProps) => {
   const themeContext = useContext(ThemeContext);
   const { theme, toggleTheme } = themeContext;
-  const { currency, toggleCurrency } = useContext(CurrencyContext);
+  const { currency, toggleCurrency, rates } = useContext(CurrencyContext);
 
   return (
     <header>
@@ -34,7 +34,7 @@ const ShoppingCart = ({ cartItems, onCheckout }: ShoppingCartProps) => {
           {cartItems.length === 0 ? (
             <div className="cart">
               <p>Your cart is empty</p>
-              <p>Total: {formatPrice(0, currency)}</p>
+              <p>Total: {formatPrice(0, currency, rates)}</p>
             </div>
           ) : (
             <CartItems cartItems={cartItems} />
