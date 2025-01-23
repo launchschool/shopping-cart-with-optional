@@ -1,4 +1,5 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
+import { createContext, ReactNode, useEffect } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 type Theme = "light" | "dark";
 
@@ -15,7 +16,7 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useLocalStorage<Theme>("theme", "light");
 
   useEffect(() => {
     document.body.className = theme;

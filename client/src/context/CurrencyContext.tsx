@@ -1,5 +1,6 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { fetchExchangeRates, ExchangeRates } from "../services/exchangeRates";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export type Currency = "USD" | "EUR";
 
@@ -18,7 +19,7 @@ export const CurrencyContext = createContext<CurrencyContextType>({
 });
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const [currency, setCurrency] = useLocalStorage<Currency>("currency", "USD");
   const [rates, setRates] = useState<ExchangeRates>({ USD: 1, EUR: 0.85 });
 
   useEffect(() => {
@@ -26,13 +27,13 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       const data = await fetchExchangeRates();
       setRates(data);
     };
-
     loadRates();
   }, [currency]);
 
   const toggleCurrency = () => {
     setCurrency((curr) => (curr === "USD" ? "EUR" : "USD"));
   };
+
   return (
     <CurrencyContext.Provider value={{ currency, toggleCurrency, rates }}>
       {children}

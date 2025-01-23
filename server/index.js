@@ -13,7 +13,6 @@ mongoose
   .connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
   })
   .then(() => console.log(`Database connected successfully`))
   .catch((err) => console.log(err));

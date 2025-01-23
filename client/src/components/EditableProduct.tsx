@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { NewProduct, Product } from "../types";
 import EditProductForm from "./EditProductForm";
 import ProductDetails from "./ProductDetails";
+import useToggle from "../hooks/useToggle";
 
 interface EditableProductProps {
   product: Product;
@@ -20,24 +20,20 @@ const EditableProduct = ({
   onDeleteProduct,
   onAddToCart,
 }: EditableProductProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleToggleEdit = () => {
-    setIsEditing(!isEditing);
-  };
+  const [isEditing, toggle] = useToggle(false);
 
   return (
     <li className="product">
       <ProductDetails
         {...product}
-        onToggleEdit={handleToggleEdit}
+        onToggleEdit={toggle}
         onDeleteProduct={onDeleteProduct}
         onAddToCart={onAddToCart}
       />
       {isEditing ? (
         <EditProductForm
           {...product}
-          onToggleEdit={handleToggleEdit}
+          onToggleEdit={toggle}
           onUpdateProduct={onUpdateProduct}
         />
       ) : null}
