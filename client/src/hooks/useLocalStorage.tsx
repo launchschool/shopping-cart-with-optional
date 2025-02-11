@@ -7,14 +7,13 @@ function useLocalStorage<T>(
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = localStorage.getItem(key);
-      // Return initialValue if no item found
+
       if (!item) {
         return initialValue;
       }
 
       try {
         const parsedItem = JSON.parse(item) as T;
-        // Validate that parsedItem is either "light" or "dark" for theme
         if (
           key === "theme" &&
           parsedItem !== "light" &&
