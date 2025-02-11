@@ -1,4 +1,7 @@
+import { useContext } from "react";
+import { formatPrice } from "../helpers/helpers";
 import { Product } from "../types";
+import { CurrencyContext } from "../context/CurrencyContext";
 
 interface ProductDetailsProps extends Product {
   onToggleEdit: () => void;
@@ -18,10 +21,11 @@ const ProductDetails = ({
   const handleDelete = () => {
     onDeleteProduct(_id);
   };
+  const { currency, rates } = useContext(CurrencyContext);
   return (
     <div className="product-details">
       <h3>{title}</h3>
-      <p className="price">${price}</p>
+      <p className="price">{formatPrice(price, currency, rates)}</p>
       <p className="quantity">{quantity} left in stock</p>
       <div className="actions product-actions">
         <button

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import ToggleableAddProductForm from "./components/ToggleableAddProductForm";
 import ShoppingCart from "./components/ShoppingCart";
 import ProductListing from "./components/ProductListing";
@@ -31,6 +31,7 @@ import {
   SortDirection,
   sortProductsAction,
 } from "./reducers/productReducer";
+import { ThemeContext } from "./context/ThemeContext";
 
 function App() {
   const [productState, dispatchProducts] = useReducer(productReducer, {
@@ -41,6 +42,7 @@ function App() {
     },
   });
   const [cartItems, dispatchCart] = useReducer(cartReducer, []);
+  const { theme } = useContext(ThemeContext);
 
   const handleSort = (key: SortKey, direction: SortDirection) => {
     dispatchProducts(sortProductsAction(key, direction));
@@ -135,7 +137,7 @@ function App() {
     }
   };
   return (
-    <div id="app">
+    <div id="app" className={theme}>
       <ShoppingCart cartItems={cartItems} onCheckout={handleCheckout} />
       <main>
         <ProductListing

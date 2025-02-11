@@ -91,6 +91,7 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/product");
 const CartItem = require("../models/cartItem");
+const mongoose = require("mongoose");
 
 router.get("/products", (req, res, next) => {
   Product.find({})
@@ -134,52 +135,39 @@ router.delete("/products/:id", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.post("/add-to-cart", (req, res, next) => {
+router.post("/add-to-cart", async (req, res, next) => {
   const { productId } = req.body;
-  Product.findById(productId)
-    .then((product) => {
-      if (product.quantity === 0) {
-        product.error = "No more items";
-        return product;
-      }
-      return Product.findByIdAndUpdate(
+  try {
+    let product = await Product.findById(productId);
+
+    if (!product || product.quantity === 0) {
+      return res.status(400).json({ error: "No more items" });
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { quantity: -1 } },
+      { new: true }
+    );
+    let item = await CartItem.findOne({ productId });
+    if (!item) {
+      item = await CartItem.create({
+        title: updatedProduct.title,
+        price: updatedProduct.price,
+        quantity: 1,
         productId,
-        {
-          quantity: product.quantity - 1,
-        },
+      });
+    } else {
+      item = await CartItem.findOneAndUpdate(
+        { productId },
+        { $inc: { quantity: 1 } },
         { new: true }
       );
-    })
-    .then((updatedProduct) => {
-      CartItem.findOne({
-        productId,
-      })
-        .then((item) => {
-          if (updatedProduct.error) {
-            return item;
-          }
-          if (!item) {
-            return CartItem.create({
-              title: updatedProduct.title,
-              price: updatedProduct.price,
-              quantity: 1,
-              productId,
-            });
-          } else {
-            return CartItem.findOneAndUpdate(
-              { productId },
-              {
-                quantity: item.quantity + 1,
-              },
-              { new: true }
-            );
-          }
-        })
-        .then((item) => {
-          const { error, ...product } = updatedProduct.toObject();
-          res.json({ product, item });
-        });
-    });
+    }
+    const { error, ...productData } = updatedProduct.toObject();
+    res.json({ product: productData, item });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 router.post("/checkout", (req, res) => {

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductForm from "./ProductForm";
 import { NewProduct, Product } from "../types";
-
 interface EditProductFormProps extends Product {
   onToggleEdit: () => void;
   onUpdateProduct: (
@@ -33,6 +32,10 @@ const EditProductForm = ({
 
     onUpdateProduct(updatedProduct, _id, onToggleEdit);
   };
+
+  useEffect(() => {
+    setQuantity(String(propQuantity));
+  }, [propQuantity]);
 
   return (
     <div className="edit-form">

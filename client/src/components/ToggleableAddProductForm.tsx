@@ -1,6 +1,6 @@
-import { useState } from "react";
 import AddProductForm from "./AddProductForm";
 import { NewProduct } from "../types";
+import useToggle from "../hooks/useToggle";
 
 interface ToggleableAddProductFormProps {
   onAddProduct: (product: NewProduct, callback: () => void) => void;
@@ -9,20 +9,15 @@ interface ToggleableAddProductFormProps {
 const ToggleableAddProductForm = ({
   onAddProduct,
 }: ToggleableAddProductFormProps) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const handleToggleForm = () => {
-    setIsVisible(!isVisible);
-  };
+  const [isVisible, toggle] = useToggle(false);
+
   return (
     <>
       {isVisible ? (
-        <AddProductForm
-          onToggleForm={handleToggleForm}
-          onAddProduct={onAddProduct}
-        />
+        <AddProductForm onToggleForm={toggle} onAddProduct={onAddProduct} />
       ) : (
         <p>
-          <button className="add-product-button" onClick={handleToggleForm}>
+          <button className="add-product-button" onClick={toggle}>
             Add A Product
           </button>
         </p>
